@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "little-lemon-rn",
+    "slug": "little-lemon-rn"
+  }
+}
