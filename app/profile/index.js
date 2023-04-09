@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import {
+  Image,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -16,9 +17,11 @@ import * as yup from 'yup';
 import 'yup-phone-lite';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ProfilePlaceholder from '../../assets/images/profile-placeholder.jpg';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { userState } from '../../atoms/User';
+import Logo from '../../assets/images/Logo.png';
+import { Ionicons } from '@expo/vector-icons';
+import ProfileImagePlaceholder from '../../assets/images/profile-placeholder.jpg';
 
 const Profile = () => {
   const [user, setUser] = useRecoilState(userState);
@@ -58,12 +61,12 @@ const Profile = () => {
     });
 
     if (!result.canceled) {
-      formikRef.current.setFieldValue('image', result.assets[0]);
+      setUser({ ...user, image: result.assets[0].uri });
+      formikRef.current.setFieldValue('image', result.assets[0].uri);
     }
   };
 
   const handleSaveChanges = async (values) => {
-    console.log(values);
     try {
       const updatedUser = {
         image: values.image,
@@ -83,20 +86,46 @@ const Profile = () => {
     }
   };
 
+  const CustomBackButton = () => {
+    return (
+      <Pressable onPress={() => router.back()}>
+        <View style={styles.backArrow}>
+          <Ionicons name='arrow-back' size={24} color='white' />
+        </View>
+      </Pressable>
+    );
+  };
+
+  const LogoTitle = () => {
+    return <Image style={{ height: 40 }} source={Logo} />;
+  };
+
   const handleLogout = () => {
     try {
-      AsyncStorage.getAllKeys()
-        .then((keys) => AsyncStorage.multiRemove(keys))
-        .then(() => alert('Success'));
+      AsyncStorage.getAllKeys().then((keys) => AsyncStorage.multiRemove(keys));
       resetUser();
       router.replace('onboarding');
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton />,
+          headerTitle: () => <LogoTitle />,
+          headerRight: () => (
+            <Image
+              style={{ width: 40, height: 40, borderRadius: 50 }}
+              source={{ uri: user.image || null }}
+              defaultSource={ProfileImagePlaceholder}
+            />
+          ),
+        }}
+      />
       <ScrollView style={styles.background}>
         <View style={styles.container}>
           <KeyboardAvoidingView
@@ -108,7 +137,7 @@ const Profile = () => {
               enableReinitialize={true}
               validationSchema={userValidationSchema}
               initialValues={{
-                image: { ProfilePlaceholder },
+                image: '',
                 firstName: '',
                 lastName: '',
                 email: '',
@@ -137,8 +166,9 @@ const Profile = () => {
                     <Pressable onPress={() => pickImage()}>
                       <View>
                         <Image
-                          style={styles.userImage}
-                          source={ProfilePlaceholder}
+                          style={{ width: 80, height: 80, borderRadius: 50 }}
+                          source={{ uri: user.image || null }}
+                          defaultSource={ProfileImagePlaceholder}
                         />
                       </View>
                     </Pressable>
@@ -312,7 +342,7 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     backgroundColor: '#495E57',
-    borderRadius: '50%',
+    borderRadius: 50,
     padding: 5,
   },
   userImage: {

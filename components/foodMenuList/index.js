@@ -1,11 +1,21 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
+import FoodMenuItem from './foodMenuItem';
+import uuid from 'react-native-uuid';
 
-const FoodMenuList = () => {
+const renderItem = ({ item }) => {
+  return <FoodMenuItem item={item} />;
+};
+
+const FoodMenuList = ({ menuItems }) => {
   return (
-    <View>
-      <Text>FoodListMenu</Text>
+    <View style={{ width: '100%' }}>
+      <FlatList
+        data={menuItems}
+        renderItem={renderItem}
+        keyExtractor={() => uuid.v4().toString()}
+      />
     </View>
   );
 };

@@ -48,16 +48,16 @@ const styles = StyleSheet.create({
   },
   heroHeading: {
     color: '#F2CF14',
-    fontSize: 60,
-    lineHeight: 60,
+    fontSize: 55,
+    lineHeight: 55,
     marginTop: 10,
     fontWeight: 'bold',
     fontFamily: 'MarkaziText-Regular',
   },
   subHeading: {
     color: '#ECEEEE',
-    fontSize: 40,
-    lineHeight: 40,
+    fontSize: 35,
+
     fontFamily: 'MarkaziText-Regular',
   },
   innerContainer: {
@@ -75,12 +75,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '55%',
   },
-
   rightFrame: {},
   searchBox: {
-    paddingTop: 10,
+    paddingTop: 20,
     width: '100%',
-    height: 70,
     display: 'flex',
 
     justifyContent: 'center',

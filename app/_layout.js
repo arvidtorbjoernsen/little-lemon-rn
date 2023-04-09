@@ -26,7 +26,7 @@ const Layout = () => {
     <RecoilRoot>
       <Stack onLayout={onLayoutRootView}>
         <Stack.Screen name='onboarding' options={{ headerShown: false }} />
-        <Stack.Screen name='profile' />
+        <Stack.Screen name='profile' options={{ headerShown: false }} />
       </Stack>
     </RecoilRoot>
   );

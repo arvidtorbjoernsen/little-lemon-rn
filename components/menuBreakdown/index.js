@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingVertical: 30,
+    paddingVertical: 10,
     backgroundColor: '#Karla-Regular',
   },
   headerText: {
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 15,
   },
   border: {
     borderBottomColor: '#E4E5E5',
     borderBottomWidth: 1,
-    paddingTop: 20,
+    paddingTop: 15,
     paddingBottom: 10,
   },
 });
