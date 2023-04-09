@@ -1,6 +1,9 @@
 {
   "expo": {
     "scheme": "acme",
+    "splash": {
+      "image": "./assets/images/splash.png"
+    },
     "web": {
       "bundler": "metro"
     },
