@@ -12,15 +12,51 @@ import { userState } from '../atoms/User';
 import ProfileImagePlaceholder from '../assets/images/profile-placeholder.jpg';
 import axios from 'axios';
 import { menuItemsState } from '../atoms/menuItems';
+import * as SQLite from 'expo-sqlite';
 
 const Home = () => {
   const [user, setUser] = useRecoilState(userState);
   const [menuItems, setMenuItems] = useRecoilState(menuItemsState);
   const router = useRouter();
   const [isOnboarded, setIsOnboarded] = useState(false);
-  import * as SQLite from 'expo-sqlite';
-
   const db = SQLite.openDatabase('db.db');
+  const [dbIsLoading, setDbIsLoading] = useState(false);
+
+  // try {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT, price TEXT, description TEXT, image TEXT);'
+  //     );
+  //   });
+  // } catch (e) {
+  //   console.log('DbError', e);
+  // }
+
+  const fetchMenuItems = async () => {
+    // try {
+    //   db.transaction((tx) => {
+    //     tx.executeSql('SELECT * FROM items', [], (_, { rows: { _array } }) =>
+    //       console.log('db', _array)
+    //     );
+    //   });
+    // } catch (e) {
+    //   console.log('error', e);
+    // }
+
+    //if (menuItems.length === 0) {
+    try {
+      const response = await axios.get(
+        'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
+      );
+      const { data } = response;
+      const stringedData = JSON.stringify(data);
+      const menuIt = JSON.parse(stringedData);
+      setMenuItems(menuIt.menu);
+    } catch (e) {
+      console.log('error', e);
+    }
+    //}
+  };
 
   const submitHandler = async (props) => {
     const { firstName, email } = props;
@@ -44,20 +80,6 @@ const Home = () => {
     router.push('/profile');
   };
 
-  const fetchMenuItems = async () => {
-    try {
-      const response = await axios.get(
-        'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
-      );
-      const { data } = response;
-      const stringedData = JSON.stringify(data);
-      const menuIt = JSON.parse(stringedData);
-      setMenuItems(menuIt.menu);
-    } catch (e) {
-      console.log('error', e);
-    }
-  };
-
   const getUserFromStorage = async () => {
     try {
       const response = await AsyncStorage.getItem('@user');
@@ -71,9 +93,28 @@ const Home = () => {
     }
   };
 
+  // const saveMenuItemsToDb = () => {
+  //   menuItems.map((item) => {
+  //     db.transaction((tx) => {
+  //       tx.executeSql(
+  //         'INSERT INTO items (name, price, description, image) VALUES (?, ?, ?, ?)',
+  //         [item.name, item.price, item.description, item.image]
+  //       );
+  //     });
+  //   });
+  // };
+
   useEffect(() => {
     getUserFromStorage();
+
+    // if (menuItems.length === null) {
+    //   setDbIsLoading(true);
     fetchMenuItems();
+    //   saveMenuItemsToDb();
+    //
+    setDbIsLoading(false);
+    // }
+    // setDbIsLoading(false);
   }, []);
 
   const LogoTitle = () => {
@@ -91,14 +132,16 @@ const Home = () => {
       >
         <Image
           style={{ width: 40, height: 40, borderRadius: 50 }}
-          source={{ uri: user.image } || null}
+          source={user.image ? { uri: user.image } : null}
           defaultSource={ProfileImagePlaceholder}
         />
       </Pressable>
     );
   };
 
-  const profilePressed = () => {};
+  if (dbIsLoading) {
+    return null;
+  }
 
   if (!isOnboarded) {
     return <Onboarding submitHandler={submitHandler} />;
@@ -119,7 +162,7 @@ const Home = () => {
         <MenuBreakdown />
       </View>
       <View style={styles.MenuContainer}>
-        <FoodMenuList menuItems={menuItems} />
+        <FoodMenuList />
       </View>
     </>
   );

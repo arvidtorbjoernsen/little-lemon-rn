@@ -120,7 +120,7 @@ const Profile = () => {
           headerRight: () => (
             <Image
               style={{ width: 40, height: 40, borderRadius: 50 }}
-              source={{ uri: user.image || null }}
+              source={user.image ? { uri: user.image } : null}
               defaultSource={ProfileImagePlaceholder}
             />
           ),
@@ -167,7 +167,7 @@ const Profile = () => {
                       <View>
                         <Image
                           style={{ width: 80, height: 80, borderRadius: 50 }}
-                          source={{ uri: user.image || null }}
+                          source={user.image ? { uri: user.image } : null}
                           defaultSource={ProfileImagePlaceholder}
                         />
                       </View>

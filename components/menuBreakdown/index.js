@@ -1,17 +1,17 @@
 import React from 'react';
 
 import { Text, View, StyleSheet } from 'react-native';
-import Button from './Button';
+import ButtonCmp from './ButtonCmp';
 
 const MenuBreakdown = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>ORDER FOR DELIVERY!</Text>
       <View style={styles.buttonContainer}>
-        <Button text='Starters' />
-        <Button text='Mains' />
-        <Button text='Desserts' />
-        <Button text='Drinks' />
+        <ButtonCmp text='Starters' />
+        <ButtonCmp text='Mains' />
+        <ButtonCmp text='Desserts' />
+        <ButtonCmp text='Drinks' />
       </View>
       <View style={styles.border}></View>
     </View>

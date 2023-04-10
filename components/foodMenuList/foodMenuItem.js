@@ -1,25 +1,24 @@
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
+import { useRecoilState } from 'recoil';
+import { dbIsLoadingState } from '../../atoms/dbIsLoading';
 
 const FoodMenuItem = ({ item }) => {
+  const [dbIsLoading] = useRecoilState(dbIsLoadingState);
   const [uri, setUri] = useState(null);
 
   useEffect(() => {
-    try {
-      FileSystem.downloadAsync(
-        `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
-        FileSystem.documentDirectory + item.image
-      )
-        .then(({ uri }) => {
-          setUri(uri);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } catch (e) {
-      console.log('error', e);
-    }
+    FileSystem.downloadAsync(
+      `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
+      FileSystem.documentDirectory + item.image
+    )
+      .then(({ uri }) => {
+        setUri(uri);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   return (
@@ -30,10 +29,14 @@ const FoodMenuItem = ({ item }) => {
           <Text style={styles.itemDescription} numberOfLines={2}>
             {item.description}
           </Text>
-          <Text style={styles.itemPrice}>{item.price}</Text>
+          <Text style={styles.itemPrice}>${item.price}</Text>
         </View>
         <View style={styles.rightView}>
+          {/*{dbIsLoading ? (*/}
+          {/*  <View style={styles.placeholder} />*/}
+          {/*) : (*/}
           {uri && <Image source={{ uri: uri }} style={styles.image} />}
+          {/*)}*/}
         </View>
       </View>
       <View style={styles.divider} />
@@ -69,6 +72,11 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+  },
+  placeholder: {
+    width: 100,
+    height: 100,
+    backgroundColor: 'lightgrey',
   },
   divider: {
     borderBottomColor: 'lightgrey',

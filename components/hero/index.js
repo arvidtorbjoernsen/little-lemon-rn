@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import HeroImage from '../../assets/images/HeroImage.png';
 import { Ionicons } from '@expo/vector-icons';
+import { useRecoilState } from 'recoil';
+import { searchState } from '../../atoms/searchState';
 
 const Hero = () => {
+  const [searchWord, setSearchWord] = useRecoilState(searchState);
+  const [searchActive, setSearchActive] = useState(false);
+
   return (
     <View style={styles.outerContainer}>
       <Text style={styles.heroHeading}>Little Lemon</Text>
@@ -28,10 +40,24 @@ const Hero = () => {
           />
         </View>
       </View>
-      <Pressable style={styles.searchBox}>
-        <View style={styles.searchButton}>
-          <Ionicons name='search' style={styles.searchIcon} />
-        </View>
+      <Pressable
+        style={styles.searchBox}
+        onPress={() => setSearchActive(!searchActive)}
+      >
+        {searchActive ? (
+          <View style={styles.searchInputContainer}>
+            <Ionicons name='search' size='30' color='#495E57' />
+            <TextInput
+              style={styles.textInput}
+              value={searchWord}
+              onChangeText={(text) => setSearchWord(text)}
+            />
+          </View>
+        ) : (
+          <View style={styles.searchButton}>
+            <Ionicons name='search' size='30' color='#495E57' />
+          </View>
+        )}
       </Pressable>
     </View>
   );
@@ -95,5 +121,27 @@ const styles = StyleSheet.create({
   searchIcon: {
     color: '#495E57',
     fontSize: 30,
+  },
+  searchInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ECEEEE',
+    borderWidth: 0.5,
+    borderColor: '#000',
+    height: 55,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  textInput: {
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    backgroundColor: '#ECEEEE',
+    height: 50,
+    width: '85%',
+    borderRadius: 10,
+    fontSize: 20,
   },
 });
